@@ -1,0 +1,9 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+<style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <item name="colorAccent">@color/brownishOrange</item>
+    <item name="android:textColorPrimary">@color/brownishOrange</item>
+    <item name="android:textColorSecondary">@color/brownishOrange</item>
+    <item name="android:background">@color/white</item>
+</style>
+</resources>

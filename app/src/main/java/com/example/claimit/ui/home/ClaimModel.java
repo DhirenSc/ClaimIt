@@ -6,13 +6,17 @@ public class ClaimModel {
     private String model;
     private String vehicle_year;
     private String created_date;
+    private String imageUrl;
+    private String severity;
 
-    public ClaimModel(String claimId, String make, String model, String vehicle_year, String created_date) {
+    public ClaimModel(String claimId, String make, String model, String vehicle_year, String created_date, String imageUrl, String severity) {
         this.claimId = claimId;
         this.make = make;
         this.model = model;
         this.vehicle_year = vehicle_year;
         this.created_date = created_date;
+        this.imageUrl = imageUrl;
+        this.severity = severity;
     }
 
     @Override
@@ -23,6 +27,8 @@ public class ClaimModel {
                 ", model='" + model + '\'' +
                 ", vehicle_year='" + vehicle_year + '\'' +
                 ", created_date='" + created_date + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", severity='" + severity + '\'' +
                 '}';
     }
 
@@ -64,6 +70,22 @@ public class ClaimModel {
 
     public void setCreated_date(String created_date) {
         this.created_date = created_date;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getSeverity() {
+        return severity;
+    }
+
+    public void setSeverity(String severity) {
+        this.severity = severity;
     }
 
 }

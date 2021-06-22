@@ -123,7 +123,6 @@ public class SignInActivity extends AppCompatActivity implements
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     try {
-                        Log.i("RESPONSE", response.toString()+"--"+call.toString());
                         String responseBody = response.body().string();
                         Log.i("RESPONSE", responseBody + "--" + response.toString());
                         if (response.code() == 200) {

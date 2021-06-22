@@ -1,13 +1,21 @@
 package com.example.claimit.ui.home;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.claimit.ClaimImageViewer;
+import com.example.claimit.DashboardActivity;
+import com.example.claimit.ImageUploadActivity;
 import com.example.claimit.R;
+import com.example.claimit.SignInActivity;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -18,6 +26,7 @@ public class ClaimAdapter extends RecyclerView.Adapter<ClaimAdapter.Viewholder> 
 
     private HomeFragment context;
     private ClaimModel[] claimModelArrayList;
+    private Context myContext;
 
     // Constructor
     public ClaimAdapter(HomeFragment context, ClaimModel[] claimModelArrayList) {
@@ -52,6 +61,18 @@ public class ClaimAdapter extends RecyclerView.Adapter<ClaimAdapter.Viewholder> 
             e.printStackTrace();
         }
         holder.createdAt.setText(dateFormat.format(dtIn));
+        myContext = holder.itemView.getContext();
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("POS - ", String.valueOf(position));
+                Log.d("ITEMS - ", model.toString());
+                Intent imageView = new Intent(myContext, ClaimImageViewer.class);
+                imageView.putExtra("MODEL", model.getImageUrl());
+                imageView.putExtra("SEVERITY", model.getSeverity());
+                myContext.startActivity(imageView);
+            }
+        });
     }
 
     @Override

@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,8 +20,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import org.json.JSONObject;
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.util.ArrayList;
 
@@ -35,8 +32,8 @@ import retrofit2.Response;
 public class ClaimFormActivity extends AppCompatActivity {
     private TextView TVname, TVemail;
     private EditText ETphone;
-    private Button btnAddImages;
-    private Spinner year, make, model;
+    private Spinner year;
+    private SearchableSpinner make, model;
     private String makeModelResponse;
     ServiceInterface serviceInterface;
 
@@ -47,10 +44,12 @@ public class ClaimFormActivity extends AppCompatActivity {
         TVname = findViewById(R.id.editTextName);
         TVemail = findViewById(R.id.editTextEmail);
         ETphone = findViewById(R.id.editTextPhone);
-        btnAddImages = findViewById(R.id.button_next_step);
+        Button btnAddImages = findViewById(R.id.button_next_step);
         year = findViewById(R.id.spinner_year);
         make = findViewById(R.id.spinner_make);
         model = findViewById(R.id.spinner_model);
+        make.setTitle("Select Make");
+        model.setTitle("Select Model");
 
         Integer[] nums = new Integer[21];
         for(int y=0;y<nums.length;y++) {
@@ -75,31 +74,38 @@ public class ClaimFormActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.i("my", t.getMessage());
+                Log.i("MAKE / MODEL", t.getMessage());
             }
         });
 
-        btnAddImages.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
-                if( TextUtils.isEmpty(ETphone.getText())){
-                    Toast.makeText(ClaimFormActivity.this, "Phone number required", Toast.LENGTH_LONG).show();
-                }
-                else {
-                    SharedPreferences.Editor myEdit = sharedPreferences.edit();
-                    // write all the data entered by the user in SharedPreference and apply
-                    myEdit.putString("phone", ETphone.getText().toString());
-                    myEdit.putString("year", year.getSelectedItem().toString());
-                    myEdit.putString("make", make.getSelectedItem().toString());
-                    myEdit.putString("model", model.getSelectedItem().toString());
-                    myEdit.apply();
-                    Intent imageUpload = new Intent(ClaimFormActivity.this, ImageUploadActivity.class);
-                    startActivity(imageUpload);
-                }
+        btnAddImages.setOnClickListener(view -> {
+            SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+            if( TextUtils.isEmpty(ETphone.getText())){
+                Toast.makeText(ClaimFormActivity.this, "Phone number required", Toast.LENGTH_LONG).show();
+            } else if (!isValidNumber(String.valueOf(ETphone.getText()))) {
+                Toast.makeText(ClaimFormActivity.this, "Phone number should be 10 digits", Toast.LENGTH_LONG).show();
+            } else if (TextUtils.isEmpty((CharSequence) make.getSelectedItem()) && TextUtils.isEmpty((CharSequence) model.getSelectedItem())) {
+                Toast.makeText(ClaimFormActivity.this, "Cannot go ahead without make / model", Toast.LENGTH_LONG).show();
+            }
+            else {
+                Log.i("MAKE - ", make.getSelectedItem().toString());
+                SharedPreferences.Editor myEdit = sharedPreferences.edit();
+                // write all the data entered by the user in SharedPreference and apply
+                myEdit.putString("phone", ETphone.getText().toString());
+                myEdit.putString("year", year.getSelectedItem().toString());
+                myEdit.putString("make", make.getSelectedItem().toString());
+                myEdit.putString("model", model.getSelectedItem().toString());
+                myEdit.apply();
+                Intent imageUpload = new Intent(ClaimFormActivity.this, ImageUploadActivity.class);
+                startActivity(imageUpload);
             }
         });
 
+    }
+
+    private boolean isValidNumber(String text){
+
+        return text.matches("^[+]?[0-9]{10}$");
     }
 
     private void addToAdapter(String makeModelResponse) {

@@ -14,6 +14,7 @@
         android:hint="Phone Number (10 digits)"
         android:inputType="phone"
         android:maxLength="10"
+        
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.411"
         app:layout_constraintStart_toStartOf="parent"
@@ -91,7 +92,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextPhone" />
 
-    <Spinner
+    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
         android:id="@+id/spinner_make"
         android:layout_width="174dp"
         android:layout_height="30dp"
@@ -101,7 +102,7 @@
         app:layout_constraintStart_toEndOf="@+id/spinner_year"
         app:layout_constraintTop_toBottomOf="@+id/editTextPhone" />
 
-    <Spinner
+    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
         android:id="@+id/spinner_model"
         android:layout_width="219dp"
         android:layout_height="30dp"

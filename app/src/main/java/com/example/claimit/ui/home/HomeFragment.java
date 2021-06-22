@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.claimit.ClaimFormActivity;
 import com.example.claimit.DashboardActivity;
 import com.example.claimit.ImageUploadActivity;
 import com.example.claimit.R;
@@ -69,12 +70,14 @@ public class HomeFragment extends Fragment {
                     }
                 } catch (Exception e) {
                     Log.d("Exception GET_CLAIM", "|=>" + e.getMessage());
+                    Toast.makeText(getActivity(), "No Claims found", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.i("my", t.getMessage());
+                Log.i("Get Claims", t.getMessage());
+                Toast.makeText(getActivity(), "No Claims found", Toast.LENGTH_LONG).show();
             }
         });
         return root;
@@ -84,6 +87,5 @@ public class HomeFragment extends Fragment {
         ClaimAdapter claimAdapter = new ClaimAdapter(this, claimArray);
         recyclerView.setAdapter(claimAdapter);
     }
-
 
 }

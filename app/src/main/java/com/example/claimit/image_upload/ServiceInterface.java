@@ -3,6 +3,7 @@ package com.example.claimit.image_upload;
 import java.util.List;
 
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -18,7 +19,7 @@ public interface ServiceInterface {
     Call<ResponseBody> uploadImages(@Part List<MultipartBody.Part> files);
 
     @POST(ApiConstants.DETECT_ENDPOINT)
-    Call<ResponseBody> detectImages(@Body String body);
+    Call<ResponseBody> detectImages(@Body RequestBody body);
 
     @GET(ApiConstants.MAKE_MODEL_ENDPOINT)
     Call<ResponseBody> getMakeModel();
@@ -27,7 +28,7 @@ public interface ServiceInterface {
     Call<ResponseBody> addOrUpdateUser(@Body String userDetails);
 
     @POST(ApiConstants.FILE_CLAIM_ENDPOINT)
-    Call<ResponseBody> fileClaim(@Body String claimDetails);
+    Call<ResponseBody> fileClaim(@Body RequestBody body);
 
     @POST(ApiConstants.GET_CLAIM_ENDPOINT)
     Call<ResponseBody> getClaims(@Body String claimDetails);

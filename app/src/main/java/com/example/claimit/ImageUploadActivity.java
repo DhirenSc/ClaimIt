@@ -193,6 +193,7 @@ public class ImageUploadActivity extends AppCompatActivity {
                     String responseBody = response.body().string();
                     Log.i("UPLOAD_IMAGES", responseBody + "--" + response.toString());
                     if (response.code() == 200) {
+                        Toast.makeText(ImageUploadActivity.this, "Images Uploaded", Toast.LENGTH_SHORT).show();
                         detectImages(responseBody);
                         //Toast.makeText(ImageUploadActivity.this, "Claim report ready", Toast.LENGTH_SHORT).show();
                     }
@@ -218,7 +219,8 @@ public class ImageUploadActivity extends AppCompatActivity {
         serviceInterface = ApiConstants.getClient().create(ServiceInterface.class);
         JsonObject responseObject = new JsonParser().parse(responseBody).getAsJsonObject();
         responseObject.remove("filename");
-        Call<ResponseBody> call = serviceInterface.detectImages(responseObject.toString());
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),responseObject.toString());
+        Call<ResponseBody> call = serviceInterface.detectImages(body);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -229,19 +231,22 @@ public class ImageUploadActivity extends AppCompatActivity {
                         JsonObject detectionsObject = new JsonParser().parse(detectionsBody).getAsJsonObject();
                         JsonObject claimObject = new JsonObject();
                         // from the SharedPreference
+                        Log.i("DETECTION_OBJECT", detectionsObject.toString());
                         SharedPreferences sh = getSharedPreferences("MySharedPref", MODE_PRIVATE);
                         claimObject.addProperty("claimId", detectionsObject.get("claimId").getAsString());
                         claimObject.addProperty("severity", detectionsObject.get("severity").getAsString());
-                        claimObject.addProperty("imageUrls", detectionsObject.get("output_urls").getAsString());
+                        claimObject.add("imageUrls", detectionsObject.get("output_urls").getAsJsonArray());
                         claimObject.addProperty("make", sh.getString("make", ""));
                         claimObject.addProperty("model", sh.getString("model", ""));
                         claimObject.addProperty("phoneNo", sh.getString("phone", ""));
                         claimObject.addProperty("year", sh.getString("year", ""));
                         claimObject.addProperty("userId", sh.getString("id", ""));
                         claimObject.addProperty("status", "Not approved");
+                        Toast.makeText(ImageUploadActivity.this, "Detections Received", Toast.LENGTH_SHORT).show();
                         fileClaim(claimObject);
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                     Log.d("Exception DETECT_IMAGES", "|=>" + e.getMessage());
 //
                 }
@@ -256,8 +261,10 @@ public class ImageUploadActivity extends AppCompatActivity {
     }
 
     private void fileClaim(JsonObject claimObject) {
+        Log.i("CLAIM_OBJECT", claimObject.toString());
         serviceInterface = ApiConstants.getClient().create(ServiceInterface.class);
-        Call<ResponseBody> call = serviceInterface.fileClaim(claimObject.toString());
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),claimObject.toString());
+        Call<ResponseBody> call = serviceInterface.fileClaim(body);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -273,6 +280,7 @@ public class ImageUploadActivity extends AppCompatActivity {
                         }
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                     Log.d("Exception", "|=>" + e.getMessage());
                 }
             }
